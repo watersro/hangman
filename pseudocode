@@ -1,0 +1,10 @@
+1st run
+X load dictionary
+X choose word 5-12 characters long
+X display spaces
+- draw stickman and correlated count for guesses
+- guess functionality, case insensitve
+- show correct guesses
+refactor 
+- add save
+- add loads
