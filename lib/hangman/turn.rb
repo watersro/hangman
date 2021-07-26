@@ -36,6 +36,7 @@ module Hangman
     def turns
       print_spaces
       while @wrong_guesses.size <= 12 && win.zero?
+        puts 'Take a guess, or save and quit:'
         guess
         win_check?
       end
