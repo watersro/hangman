@@ -1,8 +1,8 @@
-# frozen_string_literal: true2
+# frozen_string_literal: true
 
 module SaveLoad
   def dir_check
-    Dir.mkdir('saves') unless Dir.exist?('saves')
+    Dir.mkdir('.saves') unless Dir.exist?('.saves')
   end
 
   def load_progress
@@ -52,10 +52,11 @@ module SaveLoad
         puts "\n Type 'Y' to overwrite, 'N' to choose another file."
         choice = gets.chomp.downcase
       end
-      if choice == 'y'
+      case choice
+      when 'y'
         puts 'Overwriting'
         true
-      elsif choice == 'n'
+      when 'n'
         false
       end
     else
@@ -68,15 +69,11 @@ module SaveLoad
   end
 
   def display_saves
-    puts "\nPlease choose a save slot:\n1) #{progress_or_empty(1)}\n2) #{progress_or_empty(2)}\n3) #{progress_or_empty(3)}"
+    puts "\nPlease choose a save slot:
+    \n1) #{progress_or_empty(1)}\n2) #{progress_or_empty(2)}\n3) #{progress_or_empty(3)}"
   end
 
   def progress_or_empty(file_number)
     save_exists(file_number) ? 'In Progress' : 'Empty'
   end
-  # if save directory doesnt exist, make it(Dir.exists)(Dir.mkdir)
-  # if save exists, refuse name(.exists?)
-  #   else new file (File.new)
-
-  # load
 end

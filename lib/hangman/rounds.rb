@@ -61,11 +61,7 @@ module Hangman
         guess
         win_check?
       end
-      if @win == 1
-        puts "\nYou Win!"
-      else
-        puts "\nYou Lose! The word you were looking for was '#{@word_selection.chomp}'."
-      end
+      game_over?
       File.delete(@current_save) if !@current_save.nil? && File.exist?(@current_save)
     end
 
@@ -128,6 +124,14 @@ module Hangman
         puts 'Good Guess!'
       else
         puts 'Nope!'
+      end
+    end
+
+    def game_over?
+      if @win == 1
+        puts "\nYou Win!"
+      else
+        puts "\nYou Lose! The word you were looking for was '#{@word_selection.chomp}'."
       end
     end
 

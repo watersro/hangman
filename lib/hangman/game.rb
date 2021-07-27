@@ -1,10 +1,16 @@
 # frozen_string_literal: true
 
+# Class that starts the game
 class Game
   def play
     puts "\nHangman! \n1) Start a new game.\n2) Load a save.\n3) Quit."
-    start = gets.chomp.to_i
-    case start
+    choice = gets.chomp.to_i
+    choose_mode(choice)
+    play_again
+  end
+
+  def choose_mode(choice)
+    case choice
     when 1
       Hangman::Turns.new.new_game
     when 2
@@ -16,7 +22,6 @@ class Game
       puts 'Hmm, I dont know what you mean...'
       play
     end
-    play_again
   end
 
   def play_again
