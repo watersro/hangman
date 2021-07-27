@@ -1,6 +1,5 @@
-# frozen_string_literal: true
-
 require_relative 'hangman/game'
-require_relative 'hangman/turn'
+require_relative 'hangman/rounds'
+require_relative 'hangman/save'
 
-Hangman::HangmanTurn.new.turns
+Game.new.play

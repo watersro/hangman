@@ -1,15 +1,21 @@
 # frozen_string_literal: true
 
+require 'json'
+require_relative 'save'
+
 module Hangman
   # class that instatiates turns
-  class HangmanTurn
-    attr_accessor :word_selection, :selection, :wrong_guesses, :win
+  class Turns
+    attr_accessor :word_selection, :selection, :wrong_guesses, :win, :current_save
+
+    include SaveLoad
 
     def initialize
       @word_selection = nil
       @selection = []
       @wrong_guesses = []
       @win = 0
+      @current_save = nil
     end
 
     def rand_range_gen
@@ -33,33 +39,46 @@ module Hangman
       end
     end
 
-    def turns
+    def load_game
+      if load_progress == true
+        print_spaces
+        print "\n Wrong guesses:\n#{@wrong_guesses}" if @wrong_guesses.empty? == false
+        turn
+      else
+        puts 'Error, no save data in that slot.'
+      end
+    end
+
+    def new_game
+      read_file
       print_spaces
+      turn
+    end
+
+    def turn
       while @wrong_guesses.size <= 12 && win.zero?
-        puts 'Take a guess, or save and quit:'
+        puts "\nTake a guess, or type 'save' to save and quit:"
         guess
         win_check?
       end
       if @win == 1
-        puts 'You Win!'
-        true
+        puts "\nYou Win!"
       else
-        puts 'You Lose'
-        false
+        puts "\nYou Lose! The word you were looking for was '#{@word_selection.chomp}'."
       end
+      File.delete(@current_save) if !@current_save.nil? && File.exist?(@current_save)
     end
 
     # create hash from
     def print_spaces
-      read_file
       word_selection.split('').each_with_index do |item, index|
         selection[index] = [item, '_'] unless item.nil? || item == "\n"
       end
       selection.each_index do |index|
         print selection[index][1]
+        print ' '
       end
       print "\n"
-      puts word_selection
     end
 
     def guess
@@ -81,7 +100,10 @@ module Hangman
       repeat_guess?(correct, already_guessed)
       print "\n Wrong guesses:\n#{@wrong_guesses}" if @wrong_guesses.empty? == false
       print "\n"
-      selection.each_index { |index| print selection[index][1] }
+      selection.each_index do |index|
+        print selection[index][1]
+        print ' '
+      end
       print "\n"
     end
 
@@ -89,8 +111,12 @@ module Hangman
       input = gets.chomp
       if input.length == 1 && input.match(/[a-zA-Z]/)
         input.to_s
+      elsif input == 'save'
+        save_progress
+        puts 'Saved! See ya later'
+        abort
       else
-        puts 'Error: please enter one letter'
+        puts "\nError: please enter one letter"
         guess_helper
       end
     end
